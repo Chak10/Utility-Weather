@@ -107,5 +107,5 @@ class dewPoint {
             $count++;
         } while (TRUE);
     }
-
+}
 ?>
