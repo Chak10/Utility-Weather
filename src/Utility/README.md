@@ -73,10 +73,12 @@ function __construct($T, $H, $W, $Q = null,$t_u = null, $v_u = null){}
 	1. Knots => kn
 
 ```php
-$at = new appT($temperature,$humidity,$windspeed,null,'c','mph'); //If the temperature is in degrees Celsius and wind speed is in mi/h.
+$at = new appT($temperature,$humidity,$windspeed,null,'c','mph'); 
+//If the temperature is in degrees Celsius and wind speed is in mi/h.
 $at = $at->res; // int
 
-$at = new appT($temperature,$humidity,$windspeed,null,'f','kmh'); //If the temperature is in degrees Fahrenheit and wind speed is in km/h.
+$at = new appT($temperature,$humidity,$windspeed,null,'f','kmh'); 
+//If the temperature is in degrees Fahrenheit and wind speed is in km/h.
 $at = $at->res; // int
 ```
 
