@@ -163,5 +163,6 @@ $at = $at->res; // int
 ### Credits
 
 [Wikipedia](https://en.wikipedia.org/wiki/Wind_chill)
+
 [USATODAY.com](http://usatoday30.usatoday.com/weather/winter/windchill/wind-chill-formulas.htm)
 
