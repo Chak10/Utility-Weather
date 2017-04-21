@@ -300,5 +300,4 @@ class windChill {
         return $this->res = $wc;
     }
 }
-
 ?>
