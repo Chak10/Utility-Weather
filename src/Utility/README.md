@@ -149,10 +149,12 @@ _[1] WC New = 35.74 + 0.6215T - 35.75 x V^0.16 + 0.4275 x T x V^0.16_
 _[2] WC Old = 0.0817(3.71 x V^0.5 + 5.81 -0.25 x V)(T - 91.4) + 91.4_
 
 ```php
-$at = new appT($temperature,$humidity,$windspeed,null,'c','mph'); //If the temperature is in degrees Celsius and wind speed is in mi/h.
+$at = new appT($temperature,$humidity,$windspeed,null,'c','mph'); 
+//If the temperature is in degrees Celsius and wind speed is in mi/h.
 $at = $at->res; // int
 
-$at = new appT($temperature,$humidity,$windspeed,null,'f','kmh'); //If the temperature is in degrees Fahrenheit and wind speed is in km/h.
+$at = new appT($temperature,$humidity,$windspeed,null,'f','kmh'); 
+//If the temperature is in degrees Fahrenheit and wind speed is in km/h.
 $at = $at->res; // int
 ```
 
