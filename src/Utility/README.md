@@ -17,3 +17,10 @@ Compute Dewpoint for given temperature T[°C] and relative humidity RH[%].
 
 [Wolfgang Kuehn](http://www.decatur.de/javascript/dew/)
 
+## Apparent Temperature (Australian)
+
+The formula for the Apparent Temperature used by the Bureau of Meteorology is an approximations of the value provided by a mathematical model of heat balance in the human body. It can include the effects of temperature, humidity, wind-speed and radiation. Two forms are given, one including radiation and one without.
+
+### Credits
+
+[Commonwealth of Australia , Bureau of Meteorology](http://www.bom.gov.au/info/thermal_stress/)
