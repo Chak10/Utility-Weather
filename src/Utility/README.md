@@ -18,16 +18,14 @@ Compute Dewpoint for given temperature T[°C or °F] and relative humidity RH[%]
 
 ```php
 function __construct($T, $RH, $unit = "f") {
-
-/*
-	$T = Temperature => Int => Celsius or Fahrenheit or Kelvin (Specify in variable $unit)
-    $RH = Humidity => Int => Relative Humidity[%]
-    $unit = Temperature Unit => String => 
-   	Celsius => c
-    Fahrenheit => f
-    Kelvin => k
-*/
-
+```
+- **$T = Temperature => Int => Celsius or Fahrenheit or Kelvin (Specify in variable $unit)**
+- **$RH = Humidity => Int => Relative Humidity[%]**
+- **$unit = Temperature Unit => String => **
+	1. Celsius => c
+	1. Fahrenheit => f
+	1. Kelvin => k
+```php
 $dw = new dewP($temperature,$humidity); //If the temperature is in degrees Celsius.
 $dw = $dw->res; // int
 
@@ -55,26 +53,25 @@ The formula for the Apparent Temperature used by the Bureau of Meteorology is an
 ### Use
 
 ```php
-
 function __construct($T, $H, $W, $Q = null,$t_u = null, $v_u = null){}
+```
 
-/*
-	$T = Temperature => Int => Celsius or Fahrenheit or Kelvin (Specify in variable $ t_u)
-    $H = Humidity => Int => Relative Humidity[%]
-    $W = Wind Speed => Int => m/s or ft/s or mi/h or km/h or knots (Specify in variable $ v_u)
-    $Q = Solar radiation => Int => W/m²
-    $t_u = Temperature Unit => String => 
-   	Celsius => c
-    Fahrenheit => f
-    Kelvin => k
-    $v_u = Wind Unit => String => 
-    ft/s => fts
-    m/s => ms
-    mi/h => mph
-    kmh => kmh
-    Knots => kn
-*/
+- **$T = Temperature => Int => Celsius or Fahrenheit or Kelvin (Specify in variable $ t_u)**
+- **$H = Humidity => Int => Relative Humidity[%]**
+- **$W = Wind Speed => Int => m/s or ft/s or mi/h or km/h or knots (Specify in variable $ v_u)**
+- **$Q = Solar radiation => Int => W/m²**
+- **$t_u = Temperature Unit => String =>**
+	1. Celsius => c
+	1. Fahrenheit => f
+	1. Kelvin => k
+**$v_u = Wind Unit => String =>**
+	1. ft/s => fts
+	1. m/s => ms
+	1. mi/h => mph
+	1. kmh => kmh
+	1. Knots => kn
 
+```php
 $at = new appT($temperature,$humidity,$windspeed,null,'c','mph'); //If the temperature is in degrees Celsius and wind speed is in mi/h.
 $at = $at->res; // int
 
@@ -93,18 +90,17 @@ The heat index (HI) or humiture or humidex (not to be confused with the Canadian
 ### Use
 
 ```php
-
 function __construct($T, $RH, $unit = "f") {
+```
 
-/*
-	$T = Temperature => Int => Celsius or Fahrenheit or Kelvin (Specify in variable $unit)
-    $RH = Humidity => Int => Relative Humidity[%]
-    $unit = Temperature Unit => String => 
-   	Celsius => c
-    Fahrenheit => f
-    Kelvin => k
-*/
+- **$T = Temperature => Int => Celsius or Fahrenheit or Kelvin (Specify in variable $unit)**
+- **$RH = Humidity => Int => Relative Humidity[%]**
+- **$unit = Temperature Unit => String =>**
+	1. Celsius => c
+	1. Fahrenheit => f
+	1. Kelvin => k
 
+```php
 $hi = new heatI($temperature,$humidity); //If the temperature is in degrees Celsius.
 $hi = $hi->res; // int
 
@@ -125,36 +121,39 @@ Wind chill numbers are always lower than the air temperature for values where th
 ### Use
 
 ```php
-
 function __construct($T, $V, $type = true, $t_u = null, $v_u = null){}
+```
+- **$T = Temperature => Int => Celsius or Fahrenheit or Kelvin (Specify in variable $ t_u)**
 
-/*
-	$T = Temperature => Int => Celsius or Fahrenheit or Kelvin (Specify in variable $ t_u)
-    $V = Wind Speed => Int => m/s or ft/s or mi/h or km/h or knots (Specify in variable $ v_u)
-    $type = Formula Type => boolean => 
-    With true use the new formula[1]
-    With false use the old formula[2]
-    $t_u = Temperature Unit => String => 
-   	Celsius => c
-    Fahrenheit => f
-    Kelvin => k
-    $v_u = Wind Unit => String => 
-    ft/s => fts
-    m/s => ms
-    mi/h => mph
-    kmh => kmh
-    Knots => kn
-    
-*/
+- **$V = Wind Speed => Int => m/s or ft/s or mi/h or km/h or knots (Specify in variable $ v_u)**
 
+- **$type = Formula Type => boolean =>** 
+	1. With TRUE use the new formula[1]
+	1. With FALSE use the old formula[2]
+
+- **$t_u = Temperature Unit => String =>**
+	1. Celsius => c
+	1. Fahrenheit => f
+	1. Kelvin => k
+
+- **$v_u = Wind Unit => String => **
+	1. ft/s => fts
+	1. m/s => ms
+	1. mi/h => mph
+	1. kmh => kmh
+	1. Knots => kn
+
+_[1] WC New = 35.74 + 0.6215T - 35.75 x V^0.16 + 0.4275 x T x V^0.16_
+
+_[2] WC Old = 0.0817(3.71 x V^0.5 + 5.81 -0.25 x V)(T - 91.4) + 91.4_
+
+```php
 $at = new appT($temperature,$humidity,$windspeed,null,'c','mph'); //If the temperature is in degrees Celsius and wind speed is in mi/h.
 $at = $at->res; // int
 
 $at = new appT($temperature,$humidity,$windspeed,null,'f','kmh'); //If the temperature is in degrees Fahrenheit and wind speed is in km/h.
 $at = $at->res; // int
 ```
-[1] WC New = 35.74 + 0.6215T - 35.75 x V^0.16 + 0.4275 x T x V^0.16
-[2] WC Old = 0.0817(3.71 x V^0.5 + 5.81 -0.25 x V)(T - 91.4) + 91.4
 
 ### Credits
 
