@@ -21,10 +21,11 @@ function __construct($T, $RH, $unit = "f") {
 ```
 - **$T = Temperature => Int => Celsius or Fahrenheit or Kelvin (Specify in variable $unit)**
 - **$RH = Humidity => Int => Relative Humidity[%]**
-- **$unit = Temperature Unit => String => **
+- **$unit = Temperature Unit => String =>**
 	1. Celsius => c
 	1. Fahrenheit => f
 	1. Kelvin => k
+    
 ```php
 $dw = new dewP($temperature,$humidity); //If the temperature is in degrees Celsius.
 $dw = $dw->res; // int
@@ -64,7 +65,7 @@ function __construct($T, $H, $W, $Q = null,$t_u = null, $v_u = null){}
 	1. Celsius => c
 	1. Fahrenheit => f
 	1. Kelvin => k
-**$v_u = Wind Unit => String =>**
+- **$v_u = Wind Unit => String =>**
 	1. ft/s => fts
 	1. m/s => ms
 	1. mi/h => mph
@@ -136,7 +137,7 @@ function __construct($T, $V, $type = true, $t_u = null, $v_u = null){}
 	1. Fahrenheit => f
 	1. Kelvin => k
 
-- **$v_u = Wind Unit => String => **
+- **$v_u = Wind Unit => String =>**
 	1. ft/s => fts
 	1. m/s => ms
 	1. mi/h => mph
