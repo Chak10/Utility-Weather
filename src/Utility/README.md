@@ -2,7 +2,7 @@
 # Info 
 
 ```php
-require('class/Utility/converter.php');
+require('converters.php');
 
 use \wt_converter\dewPoint as dewP;
 use \wt_converter\apparentTemp as appT;
