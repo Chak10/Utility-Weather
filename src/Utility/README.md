@@ -1,5 +1,5 @@
 
-# Info 
+# Info V1.1
 
 ```php
 require('converters.php');
@@ -166,3 +166,6 @@ $at = $at->res; // int
 
 [USATODAY.com](http://usatoday30.usatoday.com/weather/winter/windchill/wind-chill-formulas.htm)
 
+# Info V 2
+
+## Coming Soon
