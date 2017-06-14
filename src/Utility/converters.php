@@ -418,10 +418,10 @@ class apparentTemp {
             return;
         $e = ($H / 100) * 6.105 * exp((17.27 * $T) / (237.7 + $T));
         if ($Q !== null && is_numeric($Q) && $Q >= 0) {
-            $old = new temperature($T + 0.33 * $e - 0.7 * $W - 4, 'c', $out == null ? $t_u : $out);
+            $new = new temperature($T + 0.348 * $e - 0.7 * $W + 0.70 * $Q / ($W + 10) - 4.25, 'c', $out == null ? $t_u : $out);
             return $this->res = $old->res;
         }
-        $new = new temperature($T + 0.348 * $e - 0.7 * $W + 0.70 * $Q / ($W + 10) - 4.25, 'c', $out == null ? $t_u : $out);
+        $new = new temperature($T + 0.33 * $e - 0.7 * $W - 4, 'c', $out == null ? $t_u : $out);
         return $this->res = $new->res;
     }
     
