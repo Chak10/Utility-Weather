@@ -412,7 +412,7 @@ class apparentTemp {
         $T = $T->res;
         if (is_nan($T))
             return;
-        $W = new temperature($W, $v_u, 'ms');
+        $W = new wind($W, $v_u, 'ms');
         $W = $W->res;
         if (is_nan($W))
             return;
