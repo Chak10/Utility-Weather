@@ -26,6 +26,7 @@ Simply include the `WeatherConverter` class in your PHP code and use the methods
 Example:
 
 ```php
-$converter = new WeatherConverter();
-$temperature = $converter->convertTemperature(100, 'F', 'C');
-echo $temperature; // Output: 37.78
+use WtConverter\Temperature;
+
+$temp = new Temperature(25, 'c', 'f');
+echo $temp->getResult(); // Output: 77 (Fahrenheit)
