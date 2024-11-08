@@ -4,7 +4,7 @@ namespace wt_converter;
 
 class Temperature {
     
-    private $res = false;
+    public $res = false;
     
     private static $conversionMap = [
         'c' => [
@@ -94,7 +94,7 @@ class Temperature {
 
 class Pressure {
     
-    private $res = false;
+    public $res = false;
     
     private static $conversionMap = [
         'hpa' => [
@@ -136,7 +136,7 @@ class Pressure {
 
 class Rain {
     
-    private $res = false;
+    public $res = false;
     
     private static $conversionMap = [
         'mm' => ['in' => 0.039370078740157],
@@ -462,6 +462,3 @@ class windChill {
     }
 }
 
-
-
-?>
