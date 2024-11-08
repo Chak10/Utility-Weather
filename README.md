@@ -9,14 +9,9 @@ Weather Converter is a PHP-based tool designed to convert weather data between d
 
 ## Installation
 
-1. Clone the repository:
+1. Install dependencies using Composer:
     ```bash
-    git clone https://github.com/chak10/weather-converter.git
-    ```
-
-2. Install dependencies using Composer:
-    ```bash
-    composer install
+    composer require chak10/weather-converter
     ```
 
 ## Usage
