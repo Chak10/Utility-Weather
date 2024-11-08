@@ -2,43 +2,57 @@
 
 namespace wt_converter;
 
-class temperature {
+class Temperature {
     
-    var $res = false;
+    private $res = false;
     
+    private static $conversionMap = [
+        'c' => [
+            'f' => 'cel2far',
+            'k' => 'cel2kel',
+            'r' => 'cel2ran',
+        ],
+        'f' => [
+            'c' => 'far2cel',
+            'k' => 'far2kel',
+            'r' => 'far2ran',
+        ],
+        'k' => [
+            'c' => 'kel2cel',
+            'f' => 'kel2far',
+            'r' => 'kel2ran',
+        ],
+        'r' => [
+            'c' => 'ran2cel',
+            'f' => 'ran2far',
+            'k' => 'ran2kel',
+        ],
+    ];
+
     function __construct($temp = null, $unit_in = null, $unit_out = null) {
         if ($temp !== null && is_numeric($temp)) {
             $unit_in = strtolower($unit_in);
             $unit_out = strtolower($unit_out);
-            if ($unit_in == $unit_out)
-                return $this->res = $temp;
-            if ($unit_in == "c" && $unit_out == "f")
-                return $this->res = self::cel2far($temp);
-            if ($unit_in == "f" && $unit_out == "c")
-                return $this->res = self::far2cel($temp);
-            if ($unit_in == "c" && $unit_out == "k")
-                return $this->res = self::cel2kel($temp);
-            if ($unit_in == "k" && $unit_out == "c")
-                return $this->res = self::kel2cel($temp);
-            if ($unit_in == "k" && $unit_out == "f")
-                return $this->res = self::kel2far($temp);
-            if ($unit_in == "f" && $unit_out == "k")
-                return $this->res = self::far2kel($temp);
-            if ($unit_in == "c" && $unit_out == "r")
-                return $this->res = self::cel2ran($temp);
-            if ($unit_in == "f" && $unit_out == "r")
-                return $this->res = self::far2ran($temp);
-            if ($unit_in == "k" && $unit_out == "r")
-                return $this->res = self::kel2ran($temp);
-            if ($unit_in == "r" && $unit_out == "c")
-                return $this->res = self::ran2cel($temp);
-            if ($unit_in == "r" && $unit_out == "f")
-                return $this->res = self::ran2far($temp);
-            if ($unit_in == "r" && $unit_out == "k")
-                return $this->res = self::ran2kel($temp);
+
+            // If the units are the same, return the input value
+            if ($unit_in === $unit_out) {
+                $this->res = $temp;
+            }
+            // If a valid conversion exists, perform the conversion
+            elseif (isset(self::$conversionMap[$unit_in][$unit_out])) {
+                $conversionMethod = self::$conversionMap[$unit_in][$unit_out];
+                $this->res = self::$conversionMethod($temp);
+            } else {
+                $this->res = NAN; // If no valid conversion is found
+            }
         }
     }
-    
+
+    public function getResult() {
+        return $this->res;
+    }
+
+    // Conversion methods
     public static function cel2far($n) {
         return $n >= -273.15 ? ($n * 1.8) + 32 : NAN;
     }
@@ -77,250 +91,188 @@ class temperature {
     }
 }
 
-class pressure {
+
+class Pressure {
     
-    var $res = false;
+    private $res = false;
     
+    private static $conversionMap = [
+        'hpa' => [
+            'atm' => 0.00098692326671601,
+            'torr' => 0.75006157818041,
+        ],
+        'atm' => [
+            'hpa' => 1013.25,
+            'torr' => 760,
+        ],
+        'torr' => [
+            'hpa' => 1.33322387,
+            'atm' => 0.001315789474,
+        ],
+    ];
+
     function __construct($pres = null, $unit_in = null, $unit_out = null) {
         if ($pres !== null && is_numeric($pres)) {
             $unit_in = strtolower($unit_in);
             $unit_out = strtolower($unit_out);
-            if ($unit_in == $unit_out)
-                return $this->res = $pres;
-            if ($unit_in == "hpa" && $unit_out == "atm")
-                return $this->res = self::HP2A($pres);
-            if ($unit_in == "hpa" && $unit_out == "torr")
-                return $this->res = self::HP2T($pres);
-            if ($unit_in == "atm" && $unit_out == "torr")
-                return $this->res = self::A2T($pres);
-            if ($unit_in == "atm" && $unit_out == "hpa")
-                return $this->res = self::A2HP($pres);
-            if ($unit_in == "torr" && $unit_out == "atm")
-                return $this->res = self::T2A($pres);
-            if ($unit_in == "torr" && $unit_out == "hpa")
-                return $this->res = self::T2HP($pres);
+            
+            // If the units are the same, return the input value
+            if ($unit_in === $unit_out) {
+                $this->res = $pres;
+            }
+            // If a valid conversion is available, perform the conversion
+            elseif (isset(self::$conversionMap[$unit_in][$unit_out])) {
+                $this->res = $pres * self::$conversionMap[$unit_in][$unit_out];
+            }
         }
     }
-    
-    public static function HP2A($n) {
-        return $n * 1013.25;
-    }
-    public static function HP2T($n) {
-        return $n * 7.5006157818041e-1;
-    }
-    public static function A2T($n) {
-        return $n * 760;
-    }
-    public static function A2HP($n) {
-        return $n * 9.8692326671601e-4;
-    }
-    public static function T2A($n) {
-        return $n / 760;
-    }
-    public static function T2HP($n) {
-        return $n * 1.33322387;
+
+    public function getResult() {
+        return $this->res;
     }
     
 }
 
-class rain {
+
+class Rain {
     
-    var $res = false;
+    private $res = false;
     
+    private static $conversionMap = [
+        'mm' => ['in' => 0.039370078740157],
+        'in' => ['mm' => 25.4],
+    ];
+
     function __construct($rain = null, $unit_in = null, $unit_out = null) {
         if ($rain !== null && is_numeric($rain)) {
             $unit_in = strtolower($unit_in);
             $unit_out = strtolower($unit_out);
-            if ($unit_in == $unit_out)
-                return $this->res = $rain;
-            if ($unit_in == "mm" && $unit_out == "in")
-                return $this->res = self::mm2in($rain);
-            if ($unit_in == "in" && $unit_out == "mm")
-                return $this->res = self::in2mm($rain);
+            
+            // If the units are the same, return the input value
+            if ($unit_in === $unit_out) {
+                $this->res = $rain;
+            }
+            // If a valid conversion is available, perform the conversion
+            elseif (isset(self::$conversionMap[$unit_in][$unit_out])) {
+                $this->res = $rain * self::$conversionMap[$unit_in][$unit_out];
+            }
         }
     }
     
     public static function mm2in($n) {
-        return $n * 3.9370078740157e-2;
+        return $n * self::$conversionMap['mm']['in'];
     }
+
     public static function in2mm($n) {
-        return $n * 25.4;
+        return $n * self::$conversionMap['in']['mm'];
+    }
+    
+    public function getResult() {
+        return $this->res;
     }
 }
 
-class wind {
+class Wind {
     
-    var $res = false;
-    
+    private $res = false;
+    private static $conversionMap = [
+        'kmh' => ['ms' => 0.27777777778, 'mph' => 0.62137119273443, 'fts' => 0.9113444160105, 'kn' => 0.53995680389235],
+        'ms' => ['kmh' => 3.6, 'mph' => 2.2369362920544, 'fts' => 3.2808398950131, 'kn' => 1.9438444924574],
+        'mph' => ['kmh' => 1.6093439987125, 'ms' => 0.44704, 'fts' => 1.4666666666667, 'kn' => 0.86897624190816],
+        'fts' => ['kmh' => 1.0972799991222, 'ms' => 0.3048, 'mph' => 0.68181818181818, 'kn' => 0.59248380130101],
+        'kn' => ['kmh' => 1.8519999985024, 'ms' => 0.27777777778, 'mph' => 1.1507794480136, 'fts' => 1.6878098570866],
+    ];
+
     function __construct($wind = null, $unit_in = null, $unit_out = null) {
         if ($wind !== null && is_numeric($wind)) {
             $unit_in = strtolower($unit_in);
             $unit_out = strtolower($unit_out);
-            if ($unit_in == $unit_out)
-                return $this->res = $wind;
-            if ($unit_in == 'kmh' && $unit_out == 'ms')
-                return $this->res = self::kmh2ms($wind);
-            if ($unit_in == 'ms' && $unit_out == 'kmh')
-                return $this->res = self::ms2kmh($wind);
-            if ($unit_in == 'mph' && $unit_out == 'ms')
-                return $this->res = self::mph2ms($wind);
-            if ($unit_in == 'ms' && $unit_out == 'mph')
-                return $this->res = self::ms2mph($wind);
-            if ($unit_in == 'kmh' && $unit_out == 'mph')
-                return $this->res = self::kmh2mph($wind);
-            if ($unit_in == 'mph' && $unit_out == 'kmh')
-                return $this->res = self::mph2kmh($wind);
-            if ($unit_in == 'ms' && $unit_out == 'fts')
-                return $this->res = self::ms2fts($wind);
-            if ($unit_in == 'ms' && $unit_out == 'kn')
-                return $this->res = self::ms2kn($wind);
-            if ($unit_in == 'kmh' && $unit_out == 'kn')
-                return $this->res = self::kmh2kn($wind);
-            if ($unit_in == 'kmh' && $unit_out == 'fts')
-                return $this->res = self::kmh2fts($wind);
-            if ($unit_in == 'mph' && $unit_out == 'fts')
-                return $this->res = self::mph2fts($wind);
-            if ($unit_in == 'mph' && $unit_out == 'kn')
-                return $this->res = self::mph2kn($wind);
-            if ($unit_in == 'fts' && $unit_out == 'ms')
-                return $this->res = self::fts2ms($wind);
-            if ($unit_in == 'fts' && $unit_out == 'kmh')
-                return $this->res = self::fts2kmh($wind);
-            if ($unit_in == 'fts' && $unit_out == 'mph')
-                return $this->res = self::fts2mph($wind);
-            if ($unit_in == 'fts' && $unit_out == 'kn')
-                return $this->res = self::fts2kn($wind);
-            if ($unit_in == 'kn' && $unit_out == 'ms')
-                return $this->res = self::kn2ms($wind);
-            if ($unit_in == 'kn' && $unit_out == 'fts')
-                return $this->res = self::kn2fts($wind);
-            if ($unit_in == 'kn' && $unit_out == 'kmh')
-                return $this->res = self::kn2kmh($wind);
-            if ($unit_in == 'kn' && $unit_out == 'mph')
-                return $this->res = self::kmh2mph($wind);
+            
+            if ($unit_in === $unit_out) {
+                $this->res = $wind;
+            } elseif (isset(self::$conversionMap[$unit_in][$unit_out])) {
+                $conversionFactor = self::$conversionMap[$unit_in][$unit_out];
+                $this->res = $wind * $conversionFactor;
+            }
         }
     }
     
-    public static function ms2kmh($n) {
-        return $n * 3.59999999712;
-    }
-    public static function ms2mph($n) {
-        return $n * 2.2369362920544;
-    }
-    public static function ms2fts($n) {
-        return $n * 3.2808398950131;
-    }
-    public static function ms2kn($n) {
-        return $n * 1.9438444924574;
-    }
-    public static function kmh2ms($n) {
-        return $n / 3.59999999712;
-    }
-    public static function kmh2kn($n) {
-        return $n * 0.53995680389235;
-    }
-    public static function kmh2mph($n) {
-        return $n * 0.62137119273443;
-    }
-    public static function kmh2fts($n) {
-        return $n * 0.9113444160105;
-    }
-    public static function mph2ms($n) {
-        return $n * 0.44704;
-    }
-    public static function mph2kmh($n) {
-        return $n * 1.6093439987125;
-    }
-    public static function mph2fts($n) {
-        return $n * 1.4666666666667;
-    }
-    public static function mph2kn($n) {
-        return $n * 0.86897624190816;
-    }
-    public static function fts2ms($n) {
-        return $n * 0.3048;
-    }
-    public static function fts2kmh($n) {
-        return $n * 1.0972799991222;
-    }
-    public static function fts2mph($n) {
-        return $n * 0.68181818181818;
-    }
-    public static function fts2kn($n) {
-        return $n * 0.59248380130101;
-    }
-    public static function kn2ms($n) {
-        return $n * (1852 / 3600);
-    }
-    public static function kn2fts($n) {
-        return $n * 1.6878098570866;
-    }
-    public static function kn2kmh($n) {
-        return $n * 1.8519999985024;
-    }
-    public static function kn2mph($n) {
-        return $n * 1.1507794480136;
-    }
     public static function degToCom($num) {
         $val = floor(($num / 22.5) + 0.5);
-        $arr = array(
-            "N",
-            "NNE",
-            "NE",
-            "ENE",
-            "E",
-            "ESE",
-            "SE",
-            "SSE",
-            "S",
-            "SSW",
-            "SW",
-            "WSW",
-            "W",
-            "WNW",
-            "NW",
-            "NNW"
-        );
-        return $arr[($val % 16)];
+        $arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+        return $arr[$val % 16];
     }
     
+    public function getResult() {
+        return $this->res;
+    }
 }
+
 
 class dewPoint {
     var $res = null;
-    
+
     function __construct($T, $RH, $t_u = 'c', $formula = 1, $out = null) {
-        if (!is_numeric($T) || !is_numeric($RH))
-            return $this->res = $T;
-        if ($RH > 100 || $RH < 0)
-            return;
-        if ($formula === 1) {
-            $T = new temperature($T, $t_u, 'k');
-            $T = $T->res;
-            if (is_nan($T))
-                return;
-            $T = new temperature(self::solve($RH / 100 * self::PVS($T), $T), 'k', $out == null ? $t_u : $out);
-        } elseif ($formula === 2) {
-            $T = new temperature($T, $t_u, 'c');
-            $T = $T->res;
-            if (is_nan($T))
-                return;
-            $T = new temperature(self::solve2($T, $RH), 'c', $out == null ? $t_u : $out);
-        } elseif ($formula === 3) {
-            $T = new temperature($T, $t_u, 'c');
-            $T = $T->res;
-            if (is_nan($T))
-                return;
-            $T = new temperature(self::solve3($T, $RH), 'c', $out == null ? $t_u : $out);
+        if (!is_numeric($T) || !is_numeric($RH)) {
+            return $this->res = null; // Se i dati non sono numerici, ritorna null.
         }
+        if ($RH < 0 || $RH > 100) {
+            return $this->res = null; // Se l'umidità relativa è fuori dal range, ritorna null.
+        }
+
+        // Converte la temperatura nel formato richiesto (Kelvin per calcoli interni)
+        $T = new Temperature($T, $t_u, 'k');
         $T = $T->res;
-        if (is_nan($T))
-            return;
-        return $this->res = $T;
+        if (is_nan($T)) {
+            return $this->res = null; // Se la temperatura non è valida, ritorna null.
+        }
+
+        // Calcola il punto di rugiada usando il metodo scelto
+        if ($formula === 1) {
+            $this->res = self::calculateDewPointByPVS($RH, $T, $out, $t_u);
+        } elseif ($formula === 2) {
+            $this->res = self::calculateDewPointByMagnus($T, $RH, $out, $t_u);
+        } elseif ($formula === 3) {
+            $this->res = self::calculateDewPointBySimplified($T, $RH, $out, $t_u);
+        }
+
+        return $this->res;
     }
-    
+
+    private static function calculateDewPointByPVS($RH, $T, $out, $t_u) {
+        // Calcola il punto di rugiada usando il metodo PVS
+        $PVS = self::PVS($T);
+        $T_dew = self::solve($RH / 100 * $PVS, $T);
+        $T_dew = new Temperature($T_dew, 'k', $out ?: $t_u);
+        return $T_dew->res;
+    }
+
+    private static function calculateDewPointByMagnus($T, $RH, $out, $t_u) {
+        // Calcola il punto di rugiada usando il metodo Magnus-Tetens
+        $B = (log($RH / 100) + ((17.27 * $T) / (237.3 + $T))) / 17.27;
+        $T_dew = (237.3 * $B) / (1 - $B);
+        $T_dew = new Temperature($T_dew, 'c', $out ?: $t_u);
+        return $T_dew->res;
+    }
+
+    private static function calculateDewPointBySimplified($T, $RH, $out, $t_u) {
+        // Calcola il punto di rugiada usando il metodo semplificato
+        $T_dew = pow($RH / 100, 1 / 8) * (112 + (0.9 * $T)) + (0.1 * $T) - 112;
+        $T_dew = new Temperature($T_dew, 'c', $out ?: $t_u);
+        return $T_dew->res;
+    }
+
+    private static function PVS($T) {
+        // Calcola la pressione di vapore
+        if ($T < 273.15) {
+            return self::pvsIce($T);
+        } else {
+            return self::pvsWater($T);
+        }
+    }
+
     private static function pvsIce($T) {
-        
+        // Calcola la pressione di vapore per il ghiaccio
         $k0 = -5.8666426e3;
         $k1 = 2.232870244e1;
         $k2 = 1.39387003e-2;
@@ -331,9 +283,9 @@ class dewPoint {
         $lnP = $k0 / $T + $k1 + ($k2 + ($k3 + ($k4 * $T)) * $T) * $T + $k5 * log($T);
         return exp($lnP);
     }
-    
+
     private static function pvsWater($T) {
-        
+        // Calcola la pressione di vapore per l'acqua
         $n1 = 0.11670521452767e4;
         $n2 = -0.72421316703206e6;
         $n3 = -0.17073846940092e2;
@@ -354,104 +306,115 @@ class dewPoint {
         $p *= $p;
         return $p * 1e6;
     }
-    
-    private static function PVS($T) {
-        if ($T < 173 || $T > 678)
-            return null;
-        else if ($T < 273.15)
-            return self::pvsIce($T);
-        else
-            return self::pvsWater($T);
-    }
-    
+
     private static function solve($y, $x0) {
+        // Metodo per risolvere l'equazione di punto di rugiada
         $x = $x0;
         $maxCount = 10;
         $count = 0;
         while (TRUE) {
-            $xNew;
             $dx = $x / 1000;
             $z = self::PVS($x);
             $xNew = $x + $dx * ($y - $z) / (self::PVS($x + $dx) - $z);
             if (abs(($xNew - $x) / $xNew) < 0.0001)
                 return $xNew;
-            else if ($count > $maxCount) {
-                $xnew = null;
-                return 273.15;
+            if ($count > $maxCount) {
+                return 273.15; // Ritorna temperatura di congelamento se non converge
             }
             $x = $xNew;
             $count++;
         }
     }
-    
-    private static function solve2($T, $RH) {
-        /* Magnus-Tetens */
-        $B = (log($RH / 100) + ((17.27 * $T) / (237.3 + $T))) / 17.27;
-        return (237.3 * $B) / (1 - $B);
-    }
-    
-    private static function solve3($T, $RH) {
-        return pow($RH / 100, 1 / 8) * (112 + (0.9 * $T)) + (0.1 * $T) - 112;
-    }
-    
 }
 
 class apparentTemp {
     var $res = null;
+
     function __construct($T, $H, $W, $Q = null, $t_u = 'c', $v_u = 'kmh', $out = null) {
         /*
         Source: Norms of apparent temperature in Australia, Aust. Met. Mag., 1994, Vol 43, 1-16
         More Info http://www.bom.gov.au/info/thermal_stress/#atapproximation
         */
-        if (!is_numeric($T) || !is_numeric($H) || !is_numeric($W))
-            return false;
-        if ($H > 100 || $H < 0)
-            return;
-        $v_u = strtolower($v_u);
-        $T = new temperature($T, $t_u, 'c');
-        $T = $T->res;
-        if (is_nan($T))
-            return;
-        $W = new wind($W, $v_u, 'ms');
-        $W = $W->res;
-        if (is_nan($W))
-            return;
-        $e = ($H / 100) * 6.105 * exp((17.27 * $T) / (237.7 + $T));
-        if ($Q !== null && is_numeric($Q) && $Q >= 0) {
-            $new = new temperature($T + 0.348 * $e - 0.7 * $W + 0.70 * $Q / ($W + 10) - 4.25, 'c', $out == null ? $t_u : $out);
-            return $this->res = $old->res;
+        
+        // Verifica dei parametri di input
+        if (!is_numeric($T) || !is_numeric($H) || !is_numeric($W) || $H < 0 || $H > 100) {
+            return false; // Ritorna false se i parametri non sono validi
         }
-        $new = new temperature($T + 0.33 * $e - 0.7 * $W - 4, 'c', $out == null ? $t_u : $out);
+
+        // Converte la temperatura in gradi Celsius
+        $T = new Temperature($T, $t_u, 'c');
+        $T = $T->res;
+        if (is_nan($T)) {
+            return; // Se la temperatura è invalida, esce
+        }
+
+        // Converte la velocità del vento in m/s
+        $W = new Wind($W, strtolower($v_u), 'ms');
+        $W = $W->res;
+        if (is_nan($W)) {
+            return; // Se la velocità del vento è invalida, esce
+        }
+
+        // Calcola la pressione del vapore
+        $e = ($H / 100) * 6.105 * exp((17.27 * $T) / (237.7 + $T));
+
+        // Calcola la temperatura apparente considerando la radiazione solare
+        if ($Q !== null && is_numeric($Q) && $Q >= 0) {
+            // Se $Q è valido, usa questa formula
+            $result = $T + 0.348 * $e - 0.7 * $W + 0.70 * $Q / ($W + 10) - 4.25;
+        } else {
+            // Altrimenti, usa la formula senza radiazione solare
+            $result = $T + 0.33 * $e - 0.7 * $W - 4;
+        }
+
+        // Restituisce la temperatura apparente nel formato richiesto
+        $outUnit = $out ?? $t_u; // Se $out è null, usa $t_u come unità di output
+        $new = new Temperature($result, 'c', $outUnit);
         return $this->res = $new->res;
     }
-    
 }
+
 
 class heatIndex {
     var $res = null;
+
     function __construct($T, $RH, $unit = "f", $out = null) {
-        if (!is_numeric($T) || !is_numeric($RH))
-            return;
-        if ($RH > 100 || $RH < 0)
-            return;
-        $T = new temperature($T, $unit, 'f');
+        // Verifica che i parametri siano validi
+        if (!is_numeric($T) || !is_numeric($RH) || $RH < 0 || $RH > 100) {
+            return; // Se non sono validi, esci
+        }
+
+        // Converte la temperatura nell'unità desiderata (in Fahrenheit)
+        $T = new Temperature($T, $unit, 'f');
         $T = $T->res;
-        $hi_sp = new temperature(0.5 * ($T + 61.0 + (($T - 68.0) * 1.2) + ($RH * 0.094)), 'f', $out == null ? $unit : $out);
+        
+        // Calcola il calore percepito con la formula di base
+        $hi_sp = new Temperature(0.5 * ($T + 61.0 + (($T - 68.0) * 1.2) + ($RH * 0.094)), 'f', $out ?? $unit);
+        
+        // Se la temperatura è al di fuori del range specificato, ritorna il risultato basato sulla formula di base
         if ($T < 80 || $T > 112) {
             return $this->res = $hi_sp->res;
         }
+        
+        // Calcolo del heat index usando la formula complessa
         $hi_cp = self::HI($T, $RH);
+        
+        // Se la temperatura è tra 80 e 87 e l'umidità è maggiore di 85, usa una formula correttiva
         if ($T >= 80 && $T <= 87 && $RH > 85) {
-            $hi = new temperature($hi_cp + (((13 - $RH) / 4) * sqrt((17 - abs($T - 95)) / 17)), 'f', $out == null ? $unit : $out);
+            $hi = new Temperature($hi_cp + (((13 - $RH) / 4) * sqrt((17 - abs($T - 95)) / 17)), 'f', $out ?? $unit);
             return $this->res = $hi->res;
         }
+        
+        // Se la temperatura è tra 80 e 112 e l'umidità è inferiore a 13, usa un'altra formula correttiva
         if ($T >= 80 && $T <= 112 && $RH <= 13) {
-            $hi = new temperature($hi_cp - (((13 - $RH) / 4) * sqrt((17 - abs($T - 95)) / 17)), 'f', $out == null ? $unit : $out);
+            $hi = new Temperature($hi_cp - (((13 - $RH) / 4) * sqrt((17 - abs($T - 95)) / 17)), 'f', $out ?? $unit);
             return $this->res = $hi->res;
         }
     }
     
+    // Calcola l'heat index usando la formula complessa di Fawzy e Steadman
     private static function HI($T, $RH) {
+        // Coefficienti della formula
         $c1 = -42.379;
         $c2 = -2.04901523;
         $c3 = -10.14333127;
@@ -461,32 +424,44 @@ class heatIndex {
         $c7 = -1.22874e-3;
         $c8 = 8.5282e-4;
         $c9 = -1.99e-6;
-        return $c1 + $c2 * $T + $c3 * $RH + $c4 * $T * $RH + $c5 * ($T * 2) + $c6 * ($RH * 2) + $c7 * ($T * 2) * $RH + $c8 * $T * ($RH * 2) + $c9 * ($T * 2) * ($RH * 2);
+        
+        // Formula per il calcolo dell'heat index
+        return $c1 + $c2 * $T + $c3 * $RH + $c4 * $T * $RH + $c5 * ($T * 2) + $c6 * ($RH * 2) 
+            + $c7 * ($T * 2) * $RH + $c8 * $T * ($RH * 2) + $c9 * ($T * 2) * ($RH * 2);
     }
 }
 
 class windChill {
-    
-    /*
-    North American and United Kingdom wind chill index
-    In November 2001, Canada, the U.S., and the U.K. implemented a new wind chill index developed by scientists and medical experts on the Joint Action Group for Temperature Indices (JAG/TI). It is determined by iterating a model of skin temperature under various wind speeds and temperatures using standard engineering correlations of wind speed and heat transfer rate. Heat transfer was calculated for a bare face in wind, facing the wind, while walking into it at 1.4 metres per second (3.1 mph). The model corrects the officially measured wind speed to the wind speed at face height, assuming the person is in an open field.
-    */
     var $res;
+
     function __construct($T, $V, $type = true, $t_u = 'c', $v_u = 'kmh', $out = null) {
-        if (!is_numeric($T) || !is_numeric($V))
-            return false;
-        $T = new temperature($T, $t_u, 'f');
-        $T = $T->res;
-        $V = new wind($V, $v_u, 'mph');
-        $V = $V->res;
-        if ($type == false) {
-            $wc = new temperature(0.0817 * (3.71 * pow($V, 0.5) + 5.81 - 0.25 * $V) * ($T - 91.4) + 91.4, 'f', $out == null ? $t_u : $out);
-            return $this->res = $wc->res; // old 
+        // Verifica dei parametri
+        if (!is_numeric($T) || !is_numeric($V)) {
+            return false; // Restituisce false se i parametri non sono numerici
         }
-        $wc = new temperature(35.74 + 0.6215 * $T - 35.75 * pow($V, 0.16) + 0.4275 * $T * pow($V, 0.16), 'f', $out == null ? $t_u : $out);
+
+        // Converte la temperatura nell'unità desiderata (in Fahrenheit)
+        $T = new Temperature($T, $t_u, 'f');
+        $T = $T->res;
+
+        // Converte la velocità del vento nell'unità desiderata (in mph)
+        $V = new Wind($V, $v_u, 'mph');
+        $V = $V->res;
+
+        // Calcola l'indice di raffreddamento da vento
+        if ($type == false) {
+            // Vecchia formula
+            $wc = new Temperature(0.0817 * (3.71 * pow($V, 0.5) + 5.81 - 0.25 * $V) * ($T - 91.4) + 91.4, 'f', $out ?? $t_u);
+        } else {
+            // Formula aggiornata
+            $wc = new Temperature(35.74 + 0.6215 * $T - 35.75 * pow($V, 0.16) + 0.4275 * $T * pow($V, 0.16), 'f', $out ?? $t_u);
+        }
+
+        // Restituisce il risultato finale
         return $this->res = $wc->res;
     }
 }
+
 
 
 ?>
