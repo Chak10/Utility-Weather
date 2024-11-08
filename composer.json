@@ -1,0 +1,20 @@
+{
+    "name": "Chak10/weather-converter",
+    "description": "A library for weather-related conversions.",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "WtConverter\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "authors": [
+        {
+            "name": "Chak10",
+            "email": "info@chak10.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
