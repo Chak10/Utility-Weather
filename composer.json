@@ -17,5 +17,6 @@
             "email": "info@chak10.com"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
